@@ -12,7 +12,5 @@
     "discord.js": "^11.4.2",
     "node-gtk": "^0.2.2"
   },
-  "devDependencies": {
-    "electron-load-devtool": "^1.2.0"
-  }
+  "devDependencies": {}
 }
