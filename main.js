@@ -20,7 +20,6 @@ win.on('delete-event', () => false)
 
 win.setDefaultSize(300, 280)
 win.setTitle("Hello, World!")
-win.setPosition(Gtk.WindowPosition.CENTER)
 
 const box = new Gtk.Box();
 
@@ -32,6 +31,8 @@ var confirm_button = new Gtk.Button({ label: "Send!" })
 var selector_box = new Gtk.Box();
 var server_select = new Gtk.ComboBoxText();
 var channel_select = new Gtk.ComboBoxText();
+var timeline_scroll = new Gtk.ScrolledWindow();
+var timeline = new Gtk.ListBox();
 
 var client_status = 0;
 
@@ -44,6 +45,7 @@ box.setOrientation(Gtk.Orientation.VERTICAL);
 selector_box.setOrientation(Gtk.Orientation.VERTICAL);
 
 input_scroll.add(input_area)
+timeline_scroll.add(timeline)
 input_area.setWrapMode(Gtk.WrapMode.CHAR);
 
 selector_box.packStart(server_select, true, false, 0)
@@ -53,11 +55,14 @@ channel_select.setVisible(false);
 
 box.add(status_text)
 box.add(selector_box)
+box.packStart(timeline_scroll, true, false, 0)
 box.packStart(input_scroll, true, false, 0)
 box.add(confirm_button)
 
 confirm_button.on("button-press-event", boot)
 input_area.on("key-press-event", post_key_press);
+
+timeline_scroll.setVisible(false);
 
 function boot(event) {
   var token = input_area_buffer.text;
@@ -70,7 +75,13 @@ function boot(event) {
   client.login(token);
 
   client.on('message', msg => {
-    console.log("<" + msg.author.username + "@" + msg.guild.name + ":" + msg.channel.name+ "> " + msg.content);
+    var message = "<" + msg.author.username + "@" + msg.guild.name + ":" + msg.channel.name+ "> " + msg.content
+    var mes = new Gtk.Label();
+    mes.setLabel(message)
+    mes.setXalign(0);
+    console.log(message)
+    timeline.add(mes);
+    win.showAll();
   });
 }
 
@@ -90,6 +101,7 @@ function boot_client(){
 
   server_select.setVisible(true);
   channel_select.setVisible(true);
+  timeline_scroll.setVisible(true);
   win.showAll();
   server_select.on("changed", update_channel);
   confirm_button.off("button-press-event", boot);
@@ -136,27 +148,15 @@ function post_message(){
 
 function post_key_press(event){
   if(event.keyval == Gdk.KEY_Escape){
-    if(client_status == 0){
-      boot();
-    }
-    if(client_status == 1){
-      post_message();
+    switch (client_status){
+      case 0:
+        boot();
+        break;
+      case 1:
+        post_message();
+        break;
     }
   }
-//  console.log(event.string)
-//  console.log(event.keyval)
-//  console.log(event)
-//  console.log(event.state)
-//  console.log(Gdk.ModifierType.CONTROL_MASK)
-//  console.log(event.state == Gdk.ModifierType.CONTROL_MASK)
-//  console.log(event.keyval == Gdk.KEY_Return)
-//  console.log(Gdk.Key.Return)
-//  console.log(Gdk.KEY_Return)
-//  console.log("CONTROL_MASK: " + Gdk.ModifierType.CONTROL_MASK)
-//  console.log("ControlMask: " + Gdk.ModifierType.ControlMask)
-//  console.log("event.state: " + event.state)
-  //if(event.state == )
-  //if ((event.state &amp; gtk.gdk.CONTROL_MASK) == gtk.gdk.CONTROL_MASK) and (event.keyval==gtk.keysyms.Return):
 }
 
 win.add(box)
