@@ -80,7 +80,7 @@ function boot(event) {
     mes.setLabel(message)
     mes.setXalign(0);
     console.log(message)
-    timeline.add(mes);
+    timeline.insert(mes, 0);
     win.showAll();
   });
 }
