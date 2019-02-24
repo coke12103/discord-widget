@@ -65,12 +65,18 @@ input_area.on("key-press-event", post_key_press);
 timeline_scroll.setVisible(false);
 
 function boot(event) {
+  status_text.setText("Loading...");
   var token = input_area_buffer.text;
   console.log("boot!");
 
   client.on("ready", () => {
     boot_client();
   });
+
+  client.on("error", error => {
+      console.log(error)
+      status_text.setText(error.prototype.toString())
+  })
 
   client.login(token);
 
@@ -134,16 +140,8 @@ function post_message(){
   var selected_server = server_select.getActiveId();
   var selected_channel = channel_select.getActiveId();
 
-  guilds.map(guild => {
-    if(guild.id === selected_server){
-      guild.channels.map(channel => {
-        if(channel.id === selected_channel){
-          channel.send(input_area_buffer.text);
-          input_area_buffer.setText("", 0);
-        };
-      });
-    };
-  });
+  guilds.get(selected_server).channels.get(selected_channel).send(input_area_buffer.text)
+  input_area_buffer.setText("", 0);
 };
 
 function post_key_press(event){
