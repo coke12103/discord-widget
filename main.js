@@ -74,20 +74,13 @@ function boot(event) {
   });
 
   client.on("error", error => {
-      console.log(error)
-      status_text.setText(error.prototype.toString())
+      status_text.setText("Error!")
   })
 
-  client.login(token);
+  client.login(token);;
 
   client.on('message', msg => {
-    var message = "<" + msg.author.username + "@" + msg.guild.name + ":" + msg.channel.name+ "> " + msg.content
-    var mes = new Gtk.Label();
-    mes.setLabel(message)
-    mes.setXalign(0);
-    console.log(message)
-    timeline.insert(mes, 0);
-    win.showAll();
+    update_timeline(msg);
   });
 }
 
@@ -155,6 +148,16 @@ function post_key_press(event){
         break;
     }
   }
+}
+
+function update_timeline(msg){
+  var message = "<" + msg.author.username + "@" + msg.guild.name + ":" + msg.channel.name+ "> " + msg.content
+  var mes = new Gtk.Label();
+  mes.setLabel(message)
+  mes.setXalign(0);
+  console.log(message)
+  timeline.insert(mes, 0);
+  win.showAll();
 }
 
 win.add(box)
