@@ -1,6 +1,7 @@
 const gi = require("node-gtk");
 Gtk = gi.require('Gtk', '3.0');
 Gdk = gi.require('Gdk', '3.0');
+GLib = gi.require('GLib');
 // ↓動いてくれ頼むから。
 //Keybinder = gi.require('Keybinder');
 const Discord = require('discord.js');
@@ -38,25 +39,27 @@ var client_status = 0;
 
 var guilds = client.guilds;
 
-status_text.setLabel("Input Token")
+status_text.setLabel("Input your token")
 input_area.setBuffer(input_area_buffer)
 
 box.setOrientation(Gtk.Orientation.VERTICAL);
 selector_box.setOrientation(Gtk.Orientation.VERTICAL);
 
 input_scroll.add(input_area)
-timeline_scroll.add(timeline)
+timeline_scroll.add(timeline);
 input_area.setWrapMode(Gtk.WrapMode.CHAR);
+//timeline.setProperty("homogeneous", GLib.Value.getBoolean(true));
 
 selector_box.packStart(server_select, true, false, 0)
 selector_box.packStart(channel_select, true, false, 0)
-server_select.setVisible(false);
-channel_select.setVisible(false);
+//server_select.setVisible(false);
+//channel_select.setVisible(false);
 
 box.add(status_text)
-box.add(selector_box)
-box.packStart(timeline_scroll, true, false, 0)
-box.packStart(input_scroll, true, false, 0)
+//box.add(selector_box)
+box.packStart(selector_box, false, false, 0)
+box.packStart(timeline_scroll, true, true, 0)
+box.packStart(input_scroll, false, false, 0)
 box.add(confirm_button)
 
 confirm_button.on("button-press-event", boot)
@@ -98,8 +101,8 @@ function boot_client(){
     console.log(guild.name);
   });
 
-  server_select.setVisible(true);
-  channel_select.setVisible(true);
+//  server_select.setVisible(true);
+//  channel_select.setVisible(true);
   timeline_scroll.setVisible(true);
   win.showAll();
   server_select.on("changed", update_channel);
