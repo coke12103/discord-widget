@@ -66,7 +66,7 @@ input_area.on("key-press-event", post_key_press);
 timeline_scroll.setVisible(false);
 
 function boot(event) {
-  status_text.setText("Loading...");
+  set_status("Loading...");
   var token = input_area_buffer.text;
   console.log("boot!");
 
@@ -75,10 +75,14 @@ function boot(event) {
   });
 
   client.on("error", error => {
-      status_text.setText("Error!")
+      set_status("Error!")
   })
 
-  client.login(token);;
+  client.login(token).then(function(){
+      set_status("Ready!");
+    }, function(error){
+      set_status(error.message);
+  });
 
   client.on('message', msg => {
     update_timeline(msg);
@@ -89,7 +93,7 @@ function boot_client(){
   console.log("ready!");
   client_status = 1;
   input_area_buffer.text = "";
-  status_text.setText("Ready!");
+
 
   var i = 0;
   guilds.map(guild => {
@@ -131,7 +135,11 @@ function post_message(){
   var selected_server = server_select.getActiveId();
   var selected_channel = channel_select.getActiveId();
 
-  guilds.get(selected_server).channels.get(selected_channel).send(input_area_buffer.text)
+  guilds.get(selected_server).channels.get(selected_channel).send(input_area_buffer.text).then(function(){
+      set_status("Posted!")
+  }, function(error){
+      set_status(error.message)
+  });
   input_area_buffer.setText("", 0);
 };
 
@@ -156,6 +164,10 @@ function update_timeline(msg){
   console.log(message)
   timeline.insert(mes, 0);
   win.showAll();
+}
+
+function set_status(sts){
+  status_text.setText(sts);
 }
 
 win.add(box)
