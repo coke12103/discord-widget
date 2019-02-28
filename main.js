@@ -44,15 +44,24 @@ input_area.setBuffer(input_area_buffer)
 
 menu.setOrientation(Gtk.Orientation.VERTICAL);
 box.setOrientation(Gtk.Orientation.VERTICAL);
-selector_box.setOrientation(Gtk.Orientation.VERTICAL);
+//selector_box.setOrientation(Gtk.Orientation.VERTICAL);
 
 
 input_scroll.add(input_area)
 timeline_scroll.add(timeline);
 input_area.setWrapMode(Gtk.WrapMode.CHAR);
 
-selector_box.packStart(server_select, true, false, 0)
-selector_box.packStart(channel_select, true, false, 0)
+//server_select.setWrapWidth(100);
+//channel_select.setWrapWidth(100);
+//var server_select_grid = new Gtk.Grid()
+//var channel_select_grid = new Gtk.Grid()
+
+//server_select_grid.attach(server_select, 0, 0, 100, 30);
+//channel_select_grid.attach(channel_select, 0, 0, 100, 30);
+//selector_box.packStart(server_select_grid, true, true, 0)
+//selector_box.packStart(channel_select_grid, true, true, 0)
+selector_box.packStart(server_select, true, true, 0)
+selector_box.packStart(channel_select, true, true, 0)
 
 box.add(status_text)
 box.packStart(selector_box, false, false, 0)
@@ -137,6 +146,9 @@ function post_message(){
 
   guilds.get(selected_server).channels.get(selected_channel).send(input_area_buffer.text).then(function(){
       set_status("Posted!")
+      setTimeout(function(){
+          set_status("Ready!");
+      }, 1500);
   }, function(error){
       set_status(error.message)
   });
