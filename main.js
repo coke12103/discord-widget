@@ -19,7 +19,7 @@ win.on('destroy', function(){
 win.on('delete-event', () => false)
 
 win.setDefaultSize(300, 280)
-win.setTitle("Hello, World!")
+win.setTitle("Discord Widget")
 
 const box = new Gtk.Box();
 
@@ -30,6 +30,7 @@ var input_area = new Gtk.TextView()
 var input_area_buffer = new Gtk.TextBuffer()
 var confirm_button = new Gtk.Button({ label: "Send!" })
 var selector_box = new Gtk.Box();
+var selector_scroll = new Gtk.ScrolledWindow();
 var server_select = new Gtk.ComboBoxText();
 var channel_select = new Gtk.ComboBoxText();
 var timeline_scroll = new Gtk.ScrolledWindow();
@@ -60,13 +61,18 @@ input_area.setWrapMode(Gtk.WrapMode.CHAR);
 //channel_select_grid.attach(channel_select, 0, 0, 100, 30);
 //selector_box.packStart(server_select_grid, true, true, 0)
 //selector_box.packStart(channel_select_grid, true, true, 0)
+
+server_select.insert(0, 0, "")
+channel_select.insert(0, 0, "");
 selector_box.packStart(server_select, true, true, 0)
 selector_box.packStart(channel_select, true, true, 0)
 
+selector_scroll.add(selector_box)
+
 box.add(status_text)
-box.packStart(selector_box, false, false, 0)
+box.packStart(selector_scroll, false, true, 0)
 box.packStart(timeline_scroll, true, true, 0)
-box.packStart(input_scroll, false, false, 0)
+box.packStart(input_scroll, false, true, 0)
 box.add(confirm_button)
 
 confirm_button.on("button-press-event", boot)
