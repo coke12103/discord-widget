@@ -62,8 +62,6 @@ input_area.setWrapMode(Gtk.WrapMode.CHAR);
 //selector_box.packStart(server_select_grid, true, true, 0)
 //selector_box.packStart(channel_select_grid, true, true, 0)
 
-server_select.insert(0, 0, "")
-channel_select.insert(0, 0, "");
 selector_box.packStart(server_select, true, true, 0)
 selector_box.packStart(channel_select, true, true, 0)
 
